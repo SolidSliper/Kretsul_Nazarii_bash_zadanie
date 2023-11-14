@@ -19,6 +19,10 @@ do
 		fi
 		echo "<p>"
 		continue
+  
+	elif echo "$LINE" | grep '<.*>' >/dev/null; then
+		LINE=$(echo "$LINE" | sed -r 's@<https://([^<]+)>@<a href="https:\1">https://\1</a>@g')
+  		echo "$LINE"
 	elif [[ $LINE == \#\ * ]]; then  # podmienka cez rozsireny syntaxis
 		LINE=$(echo "$LINE" | sed 's@^# \(.*\)$@<h1>\1</h1>@')
 		echo "$LINE"
@@ -31,9 +35,6 @@ do
 	elif echo "$LINE" | grep '_.*_' >/dev/null; then  # podmienka cez grep
                 LINE=$(echo "$LINE" | sed -r 's@_([^_]+)_@<em>\1</em>@g')
                 echo "$LINE"
-	elif echo "$LINE" | grep '<.*>' >/dev/null; then
-		LINE=$(echo "$LINE" | sed -r 's@<https://([^<]+)>@<a href="https:\1">https://\1</a>@g')
-		echo "$LINE"
 	elif [[ $LINE == "- "* ]]; then
 		if [ $OVER_CI_ZOZ = 0 ]; then
 			echo "<ul>"
